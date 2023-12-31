@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "template application name"
+version = "0.1.0"
+description = ""
+authors = ["Bender Bending Rodriguez"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.110.2"}
+asyncpg = "^0.29.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.29"}
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
+python-jose = "^3.3.0"
+
+[tool.poetry.group.dev.dependencies]
+blue = "^0.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.blue]
+line-length = 120

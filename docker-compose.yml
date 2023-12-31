@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  project_name_app:
+    container_name: project_name_app
+    hostname: project_name_app
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      project_name_postgres:
+        condition: service_healthy
+    networks:
+      - project_name
+
+
+  project_name_postgres:
+    container_name: project_name_postgres
+    hostname: project_name_postgres
+    image: postgres:15.6-bullseye
+    environment:
+      POSTGRES_USER: project_name_user
+      POSTGRES_PASSWORD: project_name_password
+      POSTGRES_DB: project_name_postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5454:5432"
+    volumes:
+      - project_name_postgres_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U project_name_user -d project_name_postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: always
+    networks:
+      - project_name
+
+
+volumes:
+  project_name_postgres_volume:
+
+networks:
+  project_name:
+    name: project_name_net
+    driver: bridge
