@@ -1,6 +1,6 @@
 from app.repositories.user import UserRepository
-from app.services.auth import AuthService
 from app.schemes.users import User, UserCreate
+from app.services.auth import AuthService
 
 
 class UserService:

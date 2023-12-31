@@ -7,10 +7,9 @@ from fastapi.responses import ORJSONResponse
 
 from app.engines.postgres_storage import PostgresEngine
 from app.routers import router
-from app.settings import settings
-
 from app.schemes.users import UserCreate
 from app.services.users import UserService
+from app.settings import settings
 
 
 async def init_postgres() -> None:
