@@ -16,20 +16,11 @@ class Settings(BaseSettings):
     POSTGRES_POOL_SIZE: int = 20
     POSTGRES_MAX_OVERFLOW: int = 5
 
-    REDIS_HOST: str = '127.0.0.1'
-    REDIS_PORT: int = 6379
-    REDIS_USER: str = 'project_name_user'
-    REDIS_PASSWORD: str = 'project_name_password'
-    REDIS_DB_NUM: int = 0
-
-    JWT_EXPIRES: int = 60
-    JWT_SECRET: str = 'some_jwt_secret'
+    JWT_EXPIRES: int = 6000000000
+    JWT_SECRET: str = 'GrandmaLivedWithTwoCheerfulGeeseOneGrayAndTheOtherWhiteTwoCheerfulGeese'
     JWT_ALGORITHM: str = 'HS256'
-    SEARCH_LIMIT_SIZE: int = 25
-    WORKERS: int = 1
 
-    PAGINATION_PAGE: int = 1
-    PAGINATION_PAGE_SIZE: int = 25
+    WORKERS: int = 1
 
 
 settings = Settings(

@@ -4,7 +4,7 @@ from typing import Any
 from sqlalchemy.exc import IntegrityError, InterfaceError, OperationalError, ProgrammingError
 from sqlalchemy.ext.asyncio import AsyncResult, AsyncSession, async_sessionmaker, create_async_engine
 
-from app.models.base import Base
+from app.models.base import BaseDB
 from app.settings import settings
 
 log = logging.getLogger(__name__)
@@ -26,18 +26,18 @@ class PostgresEngine:
     async def create_tables(self) -> None:
         try:
             async with self.engine.begin() as conn:
-                await conn.run_sync(Base.metadata.create_all)
+                await conn.run_sync(BaseDB.metadata.create_all)
         except (OperationalError, ProgrammingError, InterfaceError) as err:
             log.error(msg=f'PostgresEngine: method create_tables crashed: {err.orig}', exc_info=False)
 
     async def drop_tables(self) -> None:
         try:
             async with self.engine.begin() as conn:
-                await conn.run_sync(Base.metadata.drop_all)
+                await conn.run_sync(BaseDB.metadata.drop_all)
         except (OperationalError, ProgrammingError, InterfaceError) as err:
             log.error(msg=f'PostgresEngine: method drop_tables crashed: {err.orig}', exc_info=False)
 
-    async def execute(self, stmt: Base, no_return: bool = False, return_many: bool = False) -> Any:
+    async def execute(self, stmt: BaseDB, no_return: bool = False, return_many: bool = False) -> Any:
         try:
             async with self.async_session() as session:
                 cursor: AsyncResult = await session.execute(stmt)  # noqa
@@ -54,7 +54,7 @@ class PostgresEngine:
         finally:
             await session.close()
 
-    async def select_one(self, stmt: Base) -> Any:
+    async def select_one(self, stmt: BaseDB) -> Any:
         try:
             async with self.async_session() as session:
                 cursor: AsyncResult = await session.execute(stmt)  # noqa
@@ -64,7 +64,7 @@ class PostgresEngine:
         finally:
             await session.close()
 
-    async def select(self, stmt: Base, no_scalars: bool = False) -> Any:
+    async def select(self, stmt: BaseDB, no_scalars: bool = False) -> Any:
         try:
             async with self.async_session() as session:
                 cursor: AsyncResult = await session.execute(stmt)  # noqa
