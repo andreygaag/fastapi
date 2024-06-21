@@ -23,6 +23,8 @@ username: admin, password: admin,  user_uuid: 00000000-0000-4000-0000-0000000000
 ```shell
 cp example.env .env
 ```
+_!!! USE POSTGRES_URI for your operations system from example file_
+
 full application environment and default   app/setting.py
 
 #### docker 
