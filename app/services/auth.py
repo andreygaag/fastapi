@@ -61,5 +61,5 @@ class AuthService:
 
 async def checking_credentials(
     token: str = Depends(oauth2_scheme_user), auth_service: AuthService = Depends()
-) -> TokenData:
+) -> TokenData | None:
     return await auth_service.get_current_auth_user_data(token)
