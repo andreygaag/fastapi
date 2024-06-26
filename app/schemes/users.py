@@ -1,6 +1,10 @@
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+
+class UserPassword(BaseModel):
+    password: str = Field(example='very secret password')
 
 
 class User(BaseModel):
@@ -8,5 +12,17 @@ class User(BaseModel):
     username: str = Field(example='big_big_boss')
 
 
-class UserCreate(User):
-    password: str = Field(example='very secret password')
+class UserCreate(User, UserPassword):
+    pass
+
+
+class UserChangePassword(UserPassword):
+    password_new: str = Field(example='New secret password')
+
+    @model_validator(mode='after')
+    def check_abortion(self):
+        if len(self.password_new) < 3:
+            raise ValueError('New password must be at least 3 characters')
+        if self.password == self.password_new:
+            raise ValueError('passwords must not match')
+        return self

@@ -1,6 +1,7 @@
+from typing import NoReturn
 from uuid import UUID
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, update
 from sqlalchemy.dialects.postgresql import insert
 
 from app.engines.postgres_storage import PostgresEngine
@@ -30,3 +31,7 @@ class UserRepository:
             .returning(UserDB)
         )
         return await self.db.execute(stmt)
+
+    async def update_user(self, user_uuid: UUID, user_data: dict) -> NoReturn:
+        stmp = update(UserDB).where(UserDB.user_uuid == user_uuid).values(**user_data)
+        await self.db.execute(stmp, no_return=True)
