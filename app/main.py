@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from random import random
 
 import uvicorn
 from fastapi import FastAPI

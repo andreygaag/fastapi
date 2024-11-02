@@ -11,7 +11,8 @@ class UserDB(BaseDB):
     __tablename__ = 'users'   # noqa
     user_uuid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     username: Mapped[str] = mapped_column(index=True, unique=True)
-    password: Mapped[str] = mapped_column(nullable=True)
+    password: Mapped[str] = mapped_column(nullable=False)
+    password_salt: Mapped[str] = mapped_column(nullable=False)
 
     @hybrid_property
     def full_name(self) -> str:

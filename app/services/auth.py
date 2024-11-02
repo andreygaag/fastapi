@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from hashlib import sha256
+from hashlib import sha512
 from http import HTTPStatus
 from uuid import UUID
 
@@ -23,24 +23,24 @@ class AuthService:
         self.user_repository: UserRepository = UserRepository()
 
     def create_token(self, user_uuid: UUID) -> Token:
-        now = datetime.utcnow()
+        now = datetime.now()
         payload = {'exp': now + timedelta(seconds=self.jwt_expire), 'user_uuid': str(user_uuid)}
         token = jwt.encode(claims=payload, key=self.jwt_secret, algorithm=self.jwt_algorithm)
         return Token(access_token=token)
 
     @staticmethod
-    def hash_password(password: str) -> str:
-        return sha256((str(password) + settings.JWT_SECRET).encode('utf-8')).hexdigest()
+    def hash_password(password: str, password_salt: str) -> str:
+        return sha512((password + password_salt).encode('utf-8')).hexdigest()
 
-    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
-        if self.hash_password(plain_password) == hashed_password:
+    def verify_password(self, plain_password: str, hashed_password: str, password_salt: str) -> bool:
+        if self.hash_password(plain_password, password_salt) == hashed_password:
             return True
         else:
             return False
 
     async def authenticate_user(self, user_data: OAuth2PasswordRequestForm) -> Token:
         user_db = await self.user_repository.get_user_by_username(user_data.username.lower())
-        if not user_db or not self.verify_password(user_data.password, user_db.password):
+        if not user_db or not self.verify_password(user_data.password, user_db.password, user_db.password_salt):
             raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail='Incorrect username or password')
         return self.create_token(user_db.user_uuid)
 
