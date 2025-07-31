@@ -14,37 +14,35 @@ services:
       project_name_postgres:
         condition: service_healthy
     networks:
-      - project_name
+      - project_network
 
 
   project_name_postgres:
     container_name: project_name_postgres
     hostname: project_name_postgres
-    image: postgres:15.6-bullseye
+    image: postgres:17.0-bullseye
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: project_name_user
-      POSTGRES_PASSWORD: project_name_password
-      POSTGRES_DB: project_name_postgres
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
-      - "5454:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
-      - project_name_postgres_volume:/var/lib/postgresql/data
+      - postgres_volume:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U project_name_user -d project_name_postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
     restart: always
     networks:
-      - project_name
+      - project_network
 
 
 volumes:
-  project_name_postgres_volume:
+  postgres_volume:
 
 networks:
-  project_name:
-    name: project_name_net
+  project_network:
     driver: bridge

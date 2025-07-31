@@ -13,7 +13,7 @@ COPY ../pyproject.toml pyproject.toml
 
 RUN poetry install --only main
 
-COPY app app
+COPY . .
 
 CMD uvicorn app.main:app \
     --host "0.0.0.0" \

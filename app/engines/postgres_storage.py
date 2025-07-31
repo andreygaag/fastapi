@@ -11,9 +11,16 @@ log = logging.getLogger(__name__)
 
 
 class PostgresEngine:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not isinstance(cls._instance, cls):
+            cls._instance = object.__new__(cls, *args, **kwargs)   # noqa
+        return cls._instance
+
     def __init__(self) -> None:
         self.engine = create_async_engine(
-            url=settings.POSTGRES_URI,
+            url=f'postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}',
             echo=False,
             echo_pool=False,
             pool_size=settings.POSTGRES_POOL_SIZE,

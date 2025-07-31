@@ -10,9 +10,13 @@ class Settings(BaseSettings):
     DOC_URL: str = '/docs'
     OPENAPI_URL: str = '/openapi.json'
     LOG_LEVEL: str = 'debug'
-    POSTGRES_URI: str = (
-        'postgresql+asyncpg://project_name_user:project_name_password@project_name_postgres:5432/project_name_postgres'
-    )
+
+    POSTGRES_HOST: str = 'localhost'
+    POSTGRES_PORT: int = 5454
+    POSTGRES_DB: str = 'project_pg_db'
+    POSTGRES_USER: str = 'project_pg_user'
+    POSTGRES_PASSWORD: str = 'project_pg_pass'
+
     POSTGRES_POOL_SIZE: int = 20
     POSTGRES_MAX_OVERFLOW: int = 5
 
@@ -23,7 +27,4 @@ class Settings(BaseSettings):
     WORKERS: int = 1
 
 
-settings = Settings(
-    _env_file='../.env',
-    _env_file_encoding='utf-8',
-)
+settings = Settings()
