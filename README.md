@@ -21,7 +21,7 @@ username: admin, password: admin,  user_uuid: 00000000-0000-4000-0000-0000000000
 ### Docker container
 1. create .env file from example
 ```shell
-cp example.env .env
+cp .env.example .env
 ```
 _!!! USE POSTGRES_URI for your operations system from example file_
 
